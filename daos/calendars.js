@@ -24,7 +24,9 @@ module.exports.updateById = async (id, newData) => {
   const calendar = await Calendars.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
     return calendar;
   } catch (e) {
-    throw e;
+    // Throw so the route can see the type of exception and send back an appropriate error/status code.
+    // It feels more appropriate for that logic to be in the route.
+    throw e; 
   }
 };
 
