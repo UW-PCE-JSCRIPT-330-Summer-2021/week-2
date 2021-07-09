@@ -26,6 +26,44 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.post("/", async (req, res, next) => {
+  try {
+    const name = req.body;
+    if (!name || JSON.stringify(name) === '{}' ) {
+      res.status(400).send('Calendar name is required');
+    } else {
+      const savedName = await CalendarDAO.create(name);
+      res.json(savedName);
+    }
+  } catch (e) {
+    if (e.message.includes('validation failed:')) {
+      res.status(400).send(e.message);
+    } else {
+      res.status(500).send('Unexpected Server Error');
+    }
+  }
+});
+
+router.put("/:id", async (req, res, next) => {
+  try {
+    const calendarId = req.params.id;
+    const name = req.body;
+    if (!name || JSON.stringify(name) === '{}' || !name.name) {
+      res.status(400).send('Calendar name is required');
+    } else {
+      const result = await CalendarDAO.updateById(calendarId, name);
+      if (!result) {
+        res.status(404).send('No match ID, no updates.');
+      } else {
+        res.json(result);
+      }
+    }
+  } catch(e) {
+    next(e);
+  }
+  
+});
+
 router.delete("/:id", async (req, res, next) => {
   try {
     const calendar = await CalendarDAO.removeById(req.params.id);
