@@ -78,7 +78,11 @@ router.delete("/:id", async (req, res, next) => {
       res.sendStatus(404);
     } else {
       const deleteEvent = await EventDAO.removeById(req.params.id);
-      res.sendStatus(200);
+      if (deleteEvent) {
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(404);
+      }
     }
   } catch(e) {
     next(e);
