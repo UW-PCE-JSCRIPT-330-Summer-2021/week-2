@@ -2,9 +2,13 @@ const Calendars = require('../models/calendars');
 
 module.exports = {};
   
-module.exports.create = async (name) => {
-  return await Calendars.create({ name });
+module.exports.create = async (calendarObject) => {
+  return await Calendars.create(calendarObject);
 };
+
+module.exports.getAll = async () => {
+  return await Calendars.find().lean();
+}
 
 module.exports.getById = async (id) => {
   try {
@@ -17,9 +21,15 @@ module.exports.getById = async (id) => {
 
 module.exports.updateById = async (id, newData) => {
   try {
-    const calendar = await Calendars.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
+  const calendar = await Calendars.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
     return calendar;
   } catch (e) {
-    return null;
+    // Throw so the route can see the type of exception and send back an appropriate error/status code.
+    // It feels more appropriate for that logic to be in the route.
+    throw e; 
   }
+};
+
+module.exports.removeById = async (id) => {
+  await Calendars.deleteOne({ _id: id });
 };
