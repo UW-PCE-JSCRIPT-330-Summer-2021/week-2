@@ -2,8 +2,8 @@ const Calendars = require('../models/calendars');
 
 module.exports = {};
   
-module.exports.create = async (name) => {
-  return await Calendars.create(name);
+module.exports.create = async (calendarObject) => {
+  return await Calendars.create(calendarObject);
 };
 
 module.exports.getAll = async () => {
