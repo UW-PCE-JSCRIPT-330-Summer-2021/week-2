@@ -6,7 +6,7 @@ module.exports.create = async (eventEntity) => {
     return await Events.create({ eventEntity });
 };
 
-module.exports.getAllByCalendarId = async (id) => {
+module.exports.getAll = async (id) => {
     try {
         return await Events.find({ calendarId: id }).lean();
     } catch(e) {

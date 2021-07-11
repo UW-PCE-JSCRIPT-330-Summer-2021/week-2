@@ -7,7 +7,11 @@ module.exports.create = async (calendarEntity) => {
 };
 
 module.exports.getAll = async () => {
-  return await Calendars.find().lean();
+  try {
+    return await Calendars.find().lean();
+  } catch (e) {
+    return null;
+  }
 };
 
 module.exports.getById = async (id) => {
@@ -29,5 +33,9 @@ module.exports.updateById = async (id, newData) => {
 };
 
 module.exports.deleteById = async (id) => {
-  return await Calendars.deleteOne({ _id: id });
+  try {
+    return await Calendars.deleteOne({ _id: id });
+  } catch (e) {
+    return null;
+  }
 };

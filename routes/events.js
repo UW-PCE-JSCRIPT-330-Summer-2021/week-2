@@ -15,7 +15,7 @@ router.get("/", async (req, res, next) => {
             return;
         }
 
-        const eventList = await EventDAO.getAllByCalendarId(calendarId);
+        const eventList = await EventDAO.getAll(calendarId);
         if(!eventList || eventList.length === 0) {
             res.status(404).send('No events here');
         } else {

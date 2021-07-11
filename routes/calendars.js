@@ -47,21 +47,18 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const calendar = await CalendarDAO.getById(req.params.id);
-    if(!calendar) {
+    if(!req.body || JSON.stringify(req.body) === '{}' || !req.body.name) {
       res.status(404).send('There is no calendars');
-      return;
+    } else {
+      const calendar = await CalendarDAO.updateById(req.params.id, req.body);
+      if(!calendar) {
+        res.status(400).send('No matching ID');
+      } else {
+        res.json(calendar);
+      }
     }
-
-    const updatedCalendar = await CalendarDAO.updateById(req.params.id, req.body);
-    res.json(updatedCalendar);
   } catch(e) {
-    if (e.message.includes('validation') || e.message.includes('schema')) {
-      res.status(400).send(e.message);
-    }
-    else {
-      res.status(500).send(e.message);
-    }
+    next(e);
   }
 });
 
