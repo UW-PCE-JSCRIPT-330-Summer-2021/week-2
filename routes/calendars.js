@@ -26,16 +26,55 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
-    const calendar = await CalendarDAO.removeById(req.params.id);
-    if (calendar) {
-      res.sendStatus(200);
+    const calendar = req.body;
+    if(!calendar || JSON.stringify(calendar) === '{}') {
+      res.status(400).send('Create calendar');
     } else {
-      res.sendStatus(404);
+      const createdCalendar = await CalendarDAO.create(calendar);
+      res.json(createdCalendar);
     }
   } catch(e) {
-    next(e);
+    if (e.message.includes('validation') || e.message.includes('schema')) {
+      res.status(400).send(e.message);
+    }
+    else {
+      res.status(500).send(e.message);
+    }
+  }
+});
+
+router.put("/:id", async (req, res, next) => {
+  try {
+    const calendar = await CalendarDAO.getById(req.params.id);
+    if(!calendar) {
+      res.status(404).send('There is no calendars');
+      return;
+    }
+
+    const updatedCalendar = await CalendarDAO.updateById(req.params.id, req.body);
+    res.json(updatedCalendar);
+  } catch(e) {
+    if (e.message.includes('validation') || e.message.includes('schema')) {
+      res.status(400).send(e.message);
+    }
+    else {
+      res.status(500).send(e.message);
+    }
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const calendar = await CalendarDAO.getById(req.params.id);
+    if (!calendar) {
+      res.sendStatus(400).send('There is no calendars');
+    }
+    await CalendarDAO.deleteById(req.params.id)
+    res.sendStatus(200);
+  } catch(e) {
+    res.status(500).send(e.message);
   }
 });
 
