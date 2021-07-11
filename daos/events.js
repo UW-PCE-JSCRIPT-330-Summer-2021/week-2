@@ -16,7 +16,7 @@ module.exports.getAllByCalendarId = async (id) => {
 
 module.exports.getById = async (id) => {
     try {
-        const eventEntity = Events.findOne({ _id: id }).lean();
+        const eventEntity = await Events.findOne({ _id: id }).lean();
         return eventEntity;
     } catch(e) {
         return null;
@@ -24,14 +24,18 @@ module.exports.getById = async (id) => {
 };
 
 module.exports.deleteById = async (id) => {
-    return await Events.deleteOne({ _id: id });
+    try {
+        await Events.deleteOne({ _id: id });
+    } catch(e) {
+        return null;
+    }
 }
 
 module.exports.updateById = async (id, newData) => {
     try {
         const eventEntity = await Events.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
         return eventEntity;
-      } catch (e) {
+    } catch (e) {
         return null;
-      }
+    }
 };
