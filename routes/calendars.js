@@ -2,6 +2,8 @@ const { Router } = require("express");
 
 const CalendarDAO = require('../daos/calendars');
 
+const EventDAO = require('../daos/events');
+
 const router = Router();
 
 
@@ -47,7 +49,6 @@ router.get("/:id", async (req, res, next) => {
 });
 
 
-// Update
 router.put("/:id", async (req, res, next) => {
  
   try {
@@ -84,12 +85,13 @@ router.delete("/:id", async (req, res, next) => {
 
 
 
+
+
 router.get("/:calendarId/events", async (req, res, next) => {
 
   try {
     const id = req.params.calendarId;
-
-      const events = await CalendarDAO.getEvents(id);
+      const events = await EventDAO.getAll(id);
       if (events) {
         res.json(events);
       } else {
@@ -105,7 +107,7 @@ router.get("/:calendarId/events/:id", async (req, res, next) => {
   try {
     const calId = req.params.calendarId;
     const eventId = req.params.id;
-    const event = await CalendarDAO.getEventById(eventId); 
+    const event = await EventDAO.getById(eventId); 
 
 if(!event) {
   res.sendStatus(404);
@@ -129,14 +131,13 @@ router.post("/:calendarId/events/", async (req, res, next) => {
     const date = req.body.date;
     const event = req.body;
     const calId = req.params.calendarId;
-    // const calId = req.id;
     if (!name || JSON.stringify(name) === '{}' ) {
       res.status(400).send('name is required');
     } else if (!date|| JSON.stringify(date) === '{}' ) {
       res.status(400).send('date is required');
     }        
     else {
-      const newEvent = await CalendarDAO.createEvent(calId, event);
+      const newEvent = await EventDAO.create(calId, event);
       res.sendStatus(200);
     }
   }
@@ -154,13 +155,13 @@ router.put("/:calendarId/events/:id", async (req, res, next) => {
     const name = req.body.name;
     const date = req.body.date;
     const id = req.params.id;
-    const event = await CalendarDAO.getEventById(id); 
+    const event = await EventDAO.getById(id); 
     if (!name || JSON.stringify(name) === '{}' ) {
       res.status(400).send('name is required');
     } else if (!date|| JSON.stringify(date) === '{}' ) {
       res.status(400).send('date is required');
     }  else if ( calId  === event.calendarId.toString()){
-      const newEvent = await CalendarDAO.updateEvent(id, date, name);
+      const newEvent = await EventDAO.updateById(id, date, name);
       res.json(newEvent);
     }       
     else {
@@ -179,9 +180,9 @@ router.delete("/:calendarId/events/:id", async (req, res, next) => {
   try {
     const calId = req.params.calendarId;
     const id = req.params.id;
-    const event = await CalendarDAO.getEventById(id); 
+    const event = await EventDAO.getById(id); 
     if (event &&  calId  === event.calendarId.toString()){
-      const result  = await CalendarDAO.deleteById(id);
+      const result  = await EventDAO.removeById(id);
      console.log("result ", result);
       if (result) {
         res.sendStatus(200);
@@ -198,6 +199,7 @@ router.delete("/:calendarId/events/:id", async (req, res, next) => {
   }
   
 });
+
 
 
 module.exports = router;
