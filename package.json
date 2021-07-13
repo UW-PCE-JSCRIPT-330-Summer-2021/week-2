@@ -20,7 +20,7 @@
   "homepage": "https://github.com/UW-PCE-JSCRIPT-330-Summer-2021/week-2#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.12.12"
+    "mongoose": "^5.13.2"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.5",
