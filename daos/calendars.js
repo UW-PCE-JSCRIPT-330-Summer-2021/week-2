@@ -2,13 +2,13 @@ const Calendars = require('../models/calendars');
 
 module.exports = {};
   
-module.exports.create = async (calendarEntity) => {
-  return await Calendars.create({ calendarEntity });
+module.exports.create = async (name) => {
+  return await Calendars.create(name);
 };
 
 module.exports.getAll = async () => {
   try {
-    return await Calendars.find().lean();
+    return await Calendars.find({}).lean();
   } catch (e) {
     return null;
   }
@@ -23,18 +23,18 @@ module.exports.getById = async (id) => {
   }
 };
 
-module.exports.updateById = async (id, newData) => {
+module.exports.removeById = async (id) => {
   try {
-    const calendar = await Calendars.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
-    return calendar;
+    return await Calendars.deleteOne({ _id: id });
   } catch (e) {
     return null;
   }
 };
 
-module.exports.deleteById = async (id) => {
+module.exports.updateById = async (id, newData) => {
   try {
-    return await Calendars.deleteOne({ _id: id });
+    const calendar = await Calendars.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
+    return calendar;
   } catch (e) {
     return null;
   }

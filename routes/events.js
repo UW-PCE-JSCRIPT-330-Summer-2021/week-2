@@ -9,112 +9,90 @@ router.get("/", async (req, res, next) => {
     try {
         const calendarId = req.params.calendarId;
         const calendar = await CalendarDAO.getById(calendarId);
-
-        if(!calendar) {
-            res.status(404).send('There is no calendar');
-            return;
-        }
-
-        const eventList = await EventDAO.getAll(calendarId);
-        if(!eventList || eventList.length === 0) {
-            res.status(404).send('No events here');
-        } else {
+        if (calendar) {
+            const eventList = await EventDAO.getAll(calendarId);
             res.json(eventList);
+        } else {
+            res.sendStatus(404);
         }
-    } catch(e) {
-        res.status(500).send(e.message);
+    } catch (e) {
+        next (e);
     }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
     try {
         const calendarId = req.params.calendarId;
         const eventEntity = await EventDAO.getById(req.params.id);
-        if(!eventEntity || eventEntity.calendarId != calendarId) {
-            res.status(404).send('No events here');
-            return;
+        if (eventEntity && eventEntity.calendarId.toString() === calendarId) {
+            res.json(eventEntity);
+        } else {
+            res.sendStatus(404);
         }
-        res.json(eventEntity);
-    } catch(e) {
-        res.status(500).send(e.message);
+    } catch (e) {
+        next (e);
     }
 })
 
-router.post('/', async (req, res, next) => {
+router.post("/", async (req, res, next) => {
     try {
         const calendarId = req.params.calendarId;
+        const calendarEvent = req.body;
+        const calendarName = req.body.name;
+        const calendarDate = req.body.date;
         const calendar = await CalendarDAO.getById(calendarId);
-        if(!calendar) {
-            res.status(404).send('Invalid calendar');
-            return;
+        if (!calendar) {
+            res.sendStatus(404);
+        } else if (!calendarName || JSON.stringify(calendarName) === '{}') {
+            res.status(400).send('Put event name')
+        } else if (!calendarDate || JSON.stringify(calendarDate) === '{}') {
+            res.status(400).send('Put event name')
+        } else {
+            calendarEvent.calendarId = calendarId;
+            const createdEvent = await EventDAO.create(calendarEvent);
+            res.json(createdEvent);
         }
-
-        req.body.calendarId = calendarId;
-        const createdEvent = await EventDAO.create(req.body.calendarId);
-        res.json(createdEvent);
-    } catch(e) {
-         if (e.message.includes('validation') || e.message.includes('schema')) {
-        res.status(400).send(e.messsage);
+    } catch (e) {
+        if (e.message.includes('validation did not happen: ')) {
+            res.status(400).send(e.messsage);
         }
         else {
-        res.status(500).send(e.message);
+            res.status(500).send('Something went wrong');
         }
     }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
     try {
-        if (!req.body) {
-            res.status(404).send('No events posted');
-            return;
+        const calendarId = req.params.calendarId;
+        const calendarEvent = await EventDAO.getById(req.params.id);
+        if (calendarEvent && calendarEvent.calendarId.toString() === calendarId) {
+            const calendarUp = await EventDAO.updateById(req.params.id, req.body);
+            res.json(calendarUp);
+        } else {
+            res.sendStatus(404);
         }
-        req.body.calendarId = req.body.calendar || req.params.calendarId;
-        const calendar = await CalendarDAO.getById(req.params.calendarId);
-        if(!calendar) {
-            res.status(404).send('There is no calendar');
-            return;
+    } catch (e) {
+        if (e.message.includes('validation did not happen:')) {
+            res.status(400).send(e.message);
+        } else {
+            res.status(500).send('Something went wrong');
         }
-
-        if(req.params.calendarId !== req.body.calendarId.toString()) {
-            res.status(404).send('Calendar ID you entered is invalid');
-            return;
-        }
-
-        const eventBeUpdated = await EventDAO.getById(req.params.id);
-        if (eventBeUpdated.calendarId.toString() !== req.body.calendarId) {
-            res.status(404).send('Calendar ID you entered is invalid');
-            return;
-        }
-
-        const updatedEvent = await EventDAO.updateById(req.params.id, req.body);
-        res.json(updatedEvent);
-    } catch(e) {
-        res.status(500).send(e.message);
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
     try {
+        const calendarId = req.params.calendarId;
         const eventBeDeleted = await EventDAO.getById(req.params.id);
-        if(!eventBeDeleted) {
-            res.json(404).send('There is no events');
-            return;
+        if (eventBeDeleted && eventBeDeleted.calendarId.toString() === calendarId) {
+            await EventDAO.removeById(req.params.id);
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(404);
         }
-
-        const calendar = await CalendarDAO.getById(req.params.calendarId);
-        if(!calendar) {
-            res.json(404).send('There is no calendars');
-            return;
-        }
-
-        if(req.params.calendarId !== req.body.calendarId.toString()) {
-            res.status(404).send('Calendar ID you entered is invalid');
-            return;
-        }
-        await EventDAO.deleteById(req.params.id);
-        res.sendStatus(200);
-    } catch(e) {
-        res.status(500).send(e.message);
+    } catch (e) {
+        next (e);
     }
 });
 
