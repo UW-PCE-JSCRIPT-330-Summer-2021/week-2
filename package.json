@@ -4,7 +4,7 @@
   "description": "This week is a deeper dive into Express API development using MongoDB for data storage. The focus of this week will be on basic CRUD operations.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "test": "jest --coverage --runInBand",
     "tdd": "jest --watch --runInBand"
   },
@@ -19,12 +19,16 @@
   },
   "homepage": "https://github.com/UW-PCE-JSCRIPT-330-Summer-2021/week-2#readme",
   "dependencies": {
+    "@material-ui/core": "^4.12.1",
     "express": "^4.17.1",
-    "mongoose": "^5.12.12"
+    "mongoose": "^5.12.12",
+    "morgan": "^1.10.0",
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.5",
     "jest": "^26.6.3",
+    "nodemon": "^2.0.10",
     "supertest": "^6.1.3"
   }
 }
