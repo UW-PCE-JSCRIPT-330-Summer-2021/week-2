@@ -47,7 +47,7 @@ router.get("/", async (req, res, next) => {
       const cal = await CalendarDAO.getById(req.params.calendarId);
       const event = await EventDAO.getById(req.params.id);
 
-      if(!cal || !event || event.calendarId !== cal._id.toString()) {
+      if(!cal || !event || event.calendarId.toString() != req.params.calendarId) {
         res.sendStatus(404);
       } else {
         const deleted = await EventDAO.removeById(req.params.id);
@@ -86,7 +86,7 @@ router.get("/", async (req, res, next) => {
       const cal = await CalendarDAO.getById(req.params.calendarId);
       const event = await EventDAO.getById(eId);
 
-      if(!cal || !event || event.calendarId !== cal._id.toString()) {
+      if(!cal || !event || event.calendarId !== req.params.calendarId) {
         res.status(404).send('Calendar and Event do not match');
       } else {
         const updated = await EventDAO.updateById(eId, newEvent);
