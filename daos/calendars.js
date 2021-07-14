@@ -3,8 +3,12 @@ const Calendars = require('../models/calendars');
 module.exports = {};
   
 module.exports.create = async (name) => {
-  return await Calendars.create({ name });
+  return await Calendars.create(name);
 };
+
+module.exports.getAll = async () => {
+  return await Calendars.find({}).lean();
+}
 
 module.exports.getById = async (id) => {
   try {
@@ -23,3 +27,11 @@ module.exports.updateById = async (id, newData) => {
     return null;
   }
 };
+
+module.exports.removeById = async (id) => {
+  try {
+    return await Calendars.deleteOne({_id: id });
+  } catch(e) {
+    return null
+  }
+}
