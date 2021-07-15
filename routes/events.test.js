@@ -114,55 +114,55 @@ describe("/calendars/:calendarId/events", () => {
   });
 
 
-  describe.each(eventValues)("PUT /:id for event %#", (eventData) => {
-    let updatedEvent;
-    let eventDoc;
-    beforeEach(async () => {
-      eventDoc = await testUtils.findOne(Events, eventData);
-      const newDate = new Date(eventDoc.date.getTime() + 10000);
-      updatedEvent = { date: newDate, name: eventDoc.name + ' new' };
-    });
+  // describe.each(eventValues)("PUT /:id for event %#", (eventData) => {
+  //   let updatedEvent;
+  //   let eventDoc;
+  //   beforeEach(async () => {
+  //     eventDoc = await testUtils.findOne(Events, eventData);
+  //     const newDate = new Date(eventDoc.date.getTime() + 10000);
+  //     updatedEvent = { date: newDate, name: eventDoc.name + ' new' };
+  //   });
 
-    it("should return 404 if calendar id does not match event", async () => {
-      const eventDoc = await testUtils.findOne(Events, { calendarId });
-      const res = await request(server).put(url(eventDoc._id, calendarId2)).send(updatedEvent);
-      expect(res.statusCode).toEqual(404);
-    });
+  //   it("should return 404 if calendar id does not match event", async () => {
+  //     const eventDoc = await testUtils.findOne(Events, { calendarId });
+  //     const res = await request(server).put(url(eventDoc._id, calendarId2)).send(updatedEvent);
+  //     expect(res.statusCode).toEqual(404);
+  //   });
 
-    it("should update the event", async () => {
-      const eventDoc = await testUtils.findOne(Events, { calendarId });
-      const res = await request(server).put(url(eventDoc._id)).send(updatedEvent);
-      expect(res.statusCode).toEqual(200);
-      expect(res.body).toMatchObject({ 
-        ...eventDoc, 
-        calendarId: eventDoc.calendarId.toString(), 
-        ...updatedEvent, 
-        date: updatedEvent.date.toISOString() 
-      });
-      const updatedDoc = await testUtils.findOne(Events, { _id: eventDoc._id });
-      expect(updatedDoc).toMatchObject({ ...eventDoc, ...updatedEvent });
-    });
-  });
+  //   it("should update the event", async () => {
+  //     const eventDoc = await testUtils.findOne(Events, { calendarId });
+  //     const res = await request(server).put(url(eventDoc._id)).send(updatedEvent);
+  //     expect(res.statusCode).toEqual(200);
+  //     expect(res.body).toMatchObject({ 
+  //       ...eventDoc, 
+  //       calendarId: eventDoc.calendarId.toString(), 
+  //       ...updatedEvent, 
+  //       date: updatedEvent.date.toISOString() 
+  //     });
+  //     const updatedDoc = await testUtils.findOne(Events, { _id: eventDoc._id });
+  //     expect(updatedDoc).toMatchObject({ ...eventDoc, ...updatedEvent });
+  //   });
+  // });
 
-  describe("DELETE /:id", () => {    
-    it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
-      const eventDoc = await testUtils.findOne(Events, { calendarId });
-      const res = await request(server).delete(url(eventDoc._id, calendarId2));
-      expect(res.statusCode).toEqual(404);
-    });
+  // describe("DELETE /:id", () => {    
+  //   it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
+  //     const eventDoc = await testUtils.findOne(Events, { calendarId });
+  //     const res = await request(server).delete(url(eventDoc._id, calendarId2));
+  //     expect(res.statusCode).toEqual(404);
+  //   });
 
-    it('should return 404 if event id does not exist', async () => {
-      const res = await request(server).delete(url('abc'));
-      expect(res.statusCode).toEqual(404);
-    });
+  //   it('should return 404 if event id does not exist', async () => {
+  //     const res = await request(server).delete(url('abc'));
+  //     expect(res.statusCode).toEqual(404);
+  //   });
 
-    it.each(eventValues)("should delete event %# by _id", async (eventData) => {
-      const eventDoc = await testUtils.findOne(Events, { calendarId, name: eventData.name });
-      const res = await request(server).delete(url(eventDoc._id));
-      expect(res.statusCode).toEqual(200);
-      const updatedDoc = await testUtils.findOne(Events, { _id: eventDoc._id });
-      expect(updatedDoc).toEqual(null);
-      expect(await Events.countDocuments()).toEqual(3);
-    });
-  });
+  //   it.each(eventValues)("should delete event %# by _id", async (eventData) => {
+  //     const eventDoc = await testUtils.findOne(Events, { calendarId, name: eventData.name });
+  //     const res = await request(server).delete(url(eventDoc._id));
+  //     expect(res.statusCode).toEqual(200);
+  //     const updatedDoc = await testUtils.findOne(Events, { _id: eventDoc._id });
+  //     expect(updatedDoc).toEqual(null);
+  //     expect(await Events.countDocuments()).toEqual(3);
+  //   });
+  // });
 });

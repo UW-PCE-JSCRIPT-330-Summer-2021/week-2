@@ -1,41 +1,41 @@
 const Events = require('../models/events');
 
 module.exports = {};
-  
+
 module.exports.create = async (event) => {
   return await Events.create(event);
 };
 
-module.exports.getAll = async (calendarId) => {
+module.exports.getAll = async (calendarID) => {
   try {
-    return await Events.find({calendarId: calendarId}).lean();
+    return await Events.find({ calendarID }).lean();
   } catch (e) {
     return null;
   }
 };
 
-module.exports.getById = async (id) => {
+module.exports.getById = async (calendarID, id) => {
   try {
-    const calendar = await Events.findOne({ _id: id }).lean();
-    return calendar;
+    const event = await Events.findOne({ _id: id, calendarID }).lean();
+    return event;
   } catch (e) {
     return null;
   }
 };
 
-module.exports.updateById = async (id, newData) => {
+module.exports.updateById = async (calendarID, id, newData) => {
   try {
-    const calendar = await Events.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
-    return calendar;
+    const event = await Events.findOneAndUpdate({ _id: id, calendarID }, newData, { new: true }).lean();
+    return event;
   } catch (e) {
     return null;
   }
 };
 
-module.exports.removeById = async (id) => {
+module.exports.removeById = async (calendarID, id) => {
   try {
-    return await Events.deleteOne({ _id: id });
+    return await Events.deleteOne({ _id: id, calendarID });
   } catch (e) {
     return null;
-  } 
+  }
 };

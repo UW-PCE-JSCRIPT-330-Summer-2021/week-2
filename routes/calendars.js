@@ -8,7 +8,7 @@ router.get("/", async (req, res, next) => {
   try {
     const calendars = await CalendarDAO.getAll();
     res.json(calendars);
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
 });
@@ -21,7 +21,7 @@ router.get("/:id", async (req, res, next) => {
     } else {
       res.sendStatus(404);
     }
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
 });
@@ -29,7 +29,7 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const calendar = req.body;
-    if (!calendar || JSON.stringify(calendar) === '{}' ) {
+    if (!calendar || JSON.stringify(calendar) === '{}') {
       res.status(400).send('Calendar name is required');
     } else {
       const savedCalendar = await CalendarDAO.create(calendar);
@@ -58,10 +58,10 @@ router.put("/:id", async (req, res, next) => {
         res.json(result);
       }
     }
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
-  
+
 });
 
 router.delete("/:id", async (req, res, next) => {
@@ -72,7 +72,7 @@ router.delete("/:id", async (req, res, next) => {
     } else {
       res.sendStatus(404);
     }
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
 });
