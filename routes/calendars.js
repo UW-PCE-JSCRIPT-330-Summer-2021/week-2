@@ -8,7 +8,7 @@ router.get("/", async (req, res, next) => {
   try {
     const calendars = await CalendarDAO.getAll();
     res.json(calendars);
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
 });
@@ -21,9 +21,47 @@ router.get("/:id", async (req, res, next) => {
     } else {
       res.sendStatus(404);
     }
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
+});
+
+router.post("/", async (req, res, next) => {
+  try {
+    const calendar = req.body;
+    if (!calendar || JSON.stringify(calendar) === '{}') {
+      res.status(400).send('Calendar name is required');
+    } else {
+      const savedCalendar = await CalendarDAO.create(calendar);
+      res.json(savedCalendar);
+    }
+  } catch (e) {
+    if (e.message.includes('validation failed:')) {
+      res.status(400).send(e.message);
+    } else {
+      res.status(500).send('Unexpected Server Error');
+    }
+  }
+});
+
+router.put("/:id", async (req, res, next) => {
+  try {
+    const calendarId = req.params.id;
+    const name = req.body;
+    if (!name || JSON.stringify(name) === '{}' || !name.name) {
+      res.status(400).send('Calendar name is required');
+    } else {
+      const result = await CalendarDAO.updateById(calendarId, name);
+      if (!result) {
+        res.status(404).send('No match ID, no updates.');
+      } else {
+        res.json(result);
+      }
+    }
+  } catch (e) {
+    next(e);
+  }
+
 });
 
 router.delete("/:id", async (req, res, next) => {
@@ -34,7 +72,7 @@ router.delete("/:id", async (req, res, next) => {
     } else {
       res.sendStatus(404);
     }
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
 });
