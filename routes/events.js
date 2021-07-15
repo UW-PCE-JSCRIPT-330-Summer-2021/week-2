@@ -58,30 +58,44 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
     try {
-        const event = req.params.id;
+        const calendarId = req.params.calendarId;
+        const eventId = req.params.id;
         const name = req.body;
-        if (!name || JSON.stringify(name) === '{}' || !name.name) {
-            res.status(400).send('Calendar name is required');
+        const event = await EventDAO.getById(calendarId, eventId);
+        if (!event || JSON.stringify(event) === "{}" || calendarId !== event.calendarId.toString()) {
+            res.sendStatus(404);
         } else {
-            const result = await EventDAO.updateById(event, name);
-            if (!result) {
-                res.status(404).send('No match ID, no updates.');
-            } else {
-                res.json(result);
-            }
+            const updatedEvent = await EventDAO.updateById(calendarId, eventId, name);
+            res.json(updatedEvent);
         }
     } catch (e) {
         next(e);
     }
 });
 
+// router.delete("/:id", async (req, res, next) => {
+//     try {
+//         const event = await EventDAO.removeById(req.params.calendarId, req.params.id);
+//         if (event || calendarId == event.calendarId.toString()) {
+//             res.sendStatus(200);
+//         } else {
+//             res.sendStatus(404);
+//         }
+//     } catch (e) {
+//         next(e);
+//     }
+// });
+
 router.delete("/:id", async (req, res, next) => {
     try {
-        const event = await EventDAO.removeById(req.params.id);
-        if (event) {
-            res.sendStatus(200);
-        } else {
+        const calendarId = req.params.calendarId;
+        const eventId = req.params.id;
+        const event = await EventDAO.getById(calendarId, eventId);
+        if (!event || JSON.stringify(event) === "{}" || calendarId !== event.calendarId.toString()) {
             res.sendStatus(404);
+        } else {
+            const deletedEvent = await EventDAO.removeById(calendarId, eventId);
+            res.json(deletedEvent);
         }
     } catch (e) {
         next(e);

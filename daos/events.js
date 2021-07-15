@@ -6,35 +6,35 @@ module.exports.create = async (event) => {
   return await Events.create(event);
 };
 
-module.exports.getAll = async (calendarID) => {
+module.exports.getAll = async (calendarId) => {
   try {
-    return await Events.find({ calendarID }).lean();
+    return await Events.find({ calendarId }).lean();
   } catch (e) {
     return null;
   }
 };
 
-module.exports.getById = async (calendarID, id) => {
+module.exports.getById = async (calendarId, id) => {
   try {
-    const event = await Events.findOne({ _id: id, calendarID }).lean();
+    const event = await Events.findOne({ _id: id, calendarId }).lean();
     return event;
   } catch (e) {
     return null;
   }
 };
 
-module.exports.updateById = async (calendarID, id, newData) => {
+module.exports.updateById = async (calendarId, id, newData) => {
   try {
-    const event = await Events.findOneAndUpdate({ _id: id, calendarID }, newData, { new: true }).lean();
+    const event = await Events.findOneAndUpdate({ _id: id, calendarId }, newData, { new: true }).lean();
     return event;
   } catch (e) {
     return null;
   }
 };
 
-module.exports.removeById = async (calendarID, id) => {
+module.exports.removeById = async (calendarId, id) => {
   try {
-    return await Events.deleteOne({ _id: id, calendarID });
+    return await Events.deleteOne({ _id: id, calendarId });
   } catch (e) {
     return null;
   }
