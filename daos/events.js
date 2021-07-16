@@ -11,9 +11,12 @@ module.exports.getAll = async () => {
   }
 };
 
-module.exports.getById = async (id) => {
+module.exports.getById = async (id, calendarId) => {
   try {
-    const event = await Events.findOne({ calendarId: id }).lean();
+    const event = await Events.findOne({
+      calendarId: calendarId,
+      _id: id,
+    }).lean();
     // if (!event) {
     //   res.status(404).json({
     //     message: 'Event not found',
@@ -22,15 +25,19 @@ module.exports.getById = async (id) => {
     return event;
   } catch (e) {
     res.status(404);
-    return null;
+    //return null;
   }
 };
 
-module.exports.updateById = async (id, newData) => {
+module.exports.updateById = async (id, calendarId, newData) => {
   try {
-    const event = await Events.findOneAndUpdate({ calendarId: id }, newData, {
-      new: true,
-    }).lean();
+    const event = await Events.findOneAndUpdate(
+      { calendarId: calendarId, _id: id },
+      newData,
+      {
+        new: true,
+      }
+    ).lean();
     return event;
   } catch (e) {
     // return null;
@@ -38,32 +45,31 @@ module.exports.updateById = async (id, newData) => {
   }
 };
 
-module.exports.removeById = async (id) => {
+module.exports.removeById = async (id ) => {
   try {
-    // const event_id = await Events.findOneAndRemove({ _id: id }).lean();
-    const event = await Events.findOneAndRemove({ calendarId: id }).lean();
-    
-    return event;
+    const event_id = await Events.findOneAndRemove({_Id: id }).lean();
+    // const event = await Events.findOneAndRemove({ calendarId: id }).lean();
+
+    return event_id;
   } catch (e) {
     res.status(404);
     //   return null;
   }
 };
 
+module.exports.create = async (event, calendarId) => {
+  //const calendarId = id;
+  const newEvent = { ...event, calendarId };
 
-module.exports.create = async (name, id) => {
-  const calendarId = id;
-  const newEvent = { ...name, calendarId };
-
-  try {
-    const createdEvent = await Events.create(newEvent);
-    if (!createdEvent) {
-      res.status(404);
-    }
-    return createdEvent;
-  } catch (e) {
-    res.status(404);
-  }
+  //  try {
+  const createdEvent = await Events.create(newEvent);
+  // if (!createdEvent) {
+  //   res.status(404);
+  // }
+  return createdEvent;
+  // } catch (e) {
+  //  res.status(404);
+  //  }
 
   //return await Events.create(newEvent);
 };

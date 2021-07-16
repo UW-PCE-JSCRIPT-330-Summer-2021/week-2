@@ -6,7 +6,7 @@ router.use(morgan('dev'));
 
 router.use('/calendars', require('./calendars'));
 router.use('/calendars/:calendarId/events', require('./events'));
-// router.use('/events', require('./events'));
+router.use('/events', require('./events'));
 
 router.use((req, res, next) => {
   const error = new Error('Route not Found');

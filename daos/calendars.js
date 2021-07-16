@@ -17,8 +17,9 @@ module.exports.getById = async (id) => {
     const calendar = await Calendars.findOne({ _id: id }).lean();
     if (!calendar) {
       return res.status(404);
+    } else {
+      return calendar;
     }
-    return calendar;
   } catch (e) {
     return null;
   }
