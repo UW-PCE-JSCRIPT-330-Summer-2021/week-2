@@ -11,15 +11,15 @@ const CalendarDAO = require('../daos/calendars');
 router.get('/', async (req, res, next) => {
   const { calendarId } = req.params;
   const id = req.params.id;
-  console.log(calendarId);
+  
   const selectedCalendar = await CalendarDAO.getById(calendarId);
-  console.log(selectedCalendar);
+  
   if (!selectedCalendar) {
-    console.log('Sending 404 ');
+    
     res.sendStatus(404);
   } else {
     try {
-      const events = await EventsDAO.getAll();
+      const events = await EventsDAO.getAll(calendarId);
       // if (events) {
       res.json(events);
       // } else {
@@ -34,12 +34,11 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   const { calendarId } = req.params;
-  const id = req.params.id;
-  console.log(calendarId);
+  const id = req.params.id;  
   const selectedCalendar = await CalendarDAO.getById(calendarId);
-  console.log(selectedCalendar);
+  
   if (!selectedCalendar) {
-    console.log('Sending 404 ');
+    
     res.sendStatus(404);
   } else {
     try {
@@ -58,7 +57,7 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   const { calendarId } = req.params;
-  console.log(calendarId);
+
   const selectedCalendar = await CalendarDAO.getById(calendarId);
   console.log(selectedCalendar);
   if (!selectedCalendar) {
@@ -114,6 +113,7 @@ router.put('/:id', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   const { calendarId } = req.params;
+  const id = req.params.id;
   //console.log(calendarId);
   const selectedCalendar = await CalendarDAO.getById(calendarId);
   //console.log(selectedCalendar);

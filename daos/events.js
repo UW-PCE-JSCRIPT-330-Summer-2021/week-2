@@ -2,9 +2,9 @@ const Events = require('../models/events');
 
 module.exports = {};
 
-module.exports.getAll = async () => {
+module.exports.getAll = async (id) => {
   try {
-    const event = await Events.find();
+    const event = await Events.find({ calendarId: id });
     return event;
   } catch (e) {
     return res.status(404);
@@ -45,9 +45,11 @@ module.exports.updateById = async (id, calendarId, newData) => {
   }
 };
 
-module.exports.removeById = async (id ) => {
+module.exports.removeById = async (id) => {
   try {
-    const event_id = await Events.findOneAndRemove({_Id: id }).lean();
+    const event_id = await Events.findOneAndRemove({
+      _Id: id,
+    }).lean();
     // const event = await Events.findOneAndRemove({ calendarId: id }).lean();
 
     return event_id;
