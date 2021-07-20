@@ -2,18 +2,15 @@ const Calendars = require('../models/calendars');
 
 module.exports = {};
   
-module.exports.create = async (name ) => {
-  return await Calendars.create( name );
+module.exports.create = async (name) => {
+     return await Calendars.create(name);
 
-}; 
+ };
+
 // Get all
-module.exports.getAll = async () => {
-  try{
-    return await Calendars.find({}).lean
- } catch (e) {
-  return null;
- }
-};
+module.exports.getAll = () => {
+   return Calendars.find();
+ };
 //Get by ID
 module.exports.getById = async (id) => {
   try {

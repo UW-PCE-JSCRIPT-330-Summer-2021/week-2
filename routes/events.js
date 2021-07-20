@@ -64,18 +64,22 @@ const router = Router({ mergeParams: true });
      }
  });
 
- router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
      try {
-         const calendar = await calendarDAO.getById(req.params.calendarId);
-         const event = await eventDAO.getById(req.params.id);
-         const deleteEvent = await eventDAO.removeById(req.params.id);
-         if (!deleteEvent || !calendar || event.calendarId != req.params.calendarId) {
+         const calendar = await CalendarDAO.getById(req.params.calendarId);
+         const event = await EventDAO.getById(req.params.id);
+         if (!calendar || !event || req.params.calendarId != event.calendarId.toString()) {
              res.sendStatus(404);
          } else {
-             res.sendStatus(200);
+             const deleteEvent = await EventDAO.removeById(req.params.id);
+             if (deleteEvent) {
+                 res.sendStatus(200);
+             } else {
+                 res.sendStatus(404);
+             }
          }
      } catch (e) {
-         next(e)
+         next(e);
      }
  });
 
