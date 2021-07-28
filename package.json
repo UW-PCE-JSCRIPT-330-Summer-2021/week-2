@@ -18,6 +18,12 @@
     "url": "https://github.com/UW-PCE-JSCRIPT-330-Summer-2021/week-2/issues"
   },
   "homepage": "https://github.com/UW-PCE-JSCRIPT-330-Summer-2021/week-2#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
   "dependencies": {
     "express": "^4.17.1",
     "mongoose": "^5.12.12"

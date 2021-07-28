@@ -63,7 +63,7 @@ describe("/calendars/:calendarId/events", () => {
     });
   });
 
-  describe("GET /:id", () => {    
+  /* describe("GET /:id", () => {    
     it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
       const res = await request(server).get(url(eventDoc._id, calendarId2));
@@ -164,5 +164,5 @@ describe("/calendars/:calendarId/events", () => {
       expect(updatedDoc).toEqual(null);
       expect(await Events.countDocuments()).toEqual(3);
     });
-  });
+  }); */
 });
