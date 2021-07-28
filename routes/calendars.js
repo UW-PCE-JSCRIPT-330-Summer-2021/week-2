@@ -39,4 +39,24 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
+router.post("/", async (req, res, next) => {
+  try {
+    const reqBody = { ...req.body };
+    //console.log(`router.post: name = ${reqBody.name}`)
+    if (reqBody.name == null || reqBody.name == 'undefined') {
+      res.sendStatus(400);
+    } 
+
+    const calendar = await CalendarDAO.create({reqBody});
+    if (calendar) {
+      res.json(calendar);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch(e) {
+    next(e);
+  }
+});
+
+
 module.exports = router;

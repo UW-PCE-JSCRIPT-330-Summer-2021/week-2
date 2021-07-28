@@ -51,11 +51,11 @@ describe("/calendars", () => {
 
 
   describe("POST /id", () => {    
-    it("should return 400 if no name provided", async () => {
+     it("should return 400 if no name provided", async () => {
       const res = await request(server).post("/calendars").send({ nme: 'missing' });
       expect(res.statusCode).toEqual(400);
       expect(await Calendars.countDocuments()).toEqual(calendarValues.length);
-    });
+    }); 
     it("should create a new calendar if name is provided", async () => {
       const res = await request(server).post("/calendars").send({ name: 'new' });
       expect(res.statusCode).toEqual(200);
