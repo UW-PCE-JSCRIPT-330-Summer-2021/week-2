@@ -66,7 +66,7 @@ describe("/calendars", () => {
   });
 
 
-/* 
+ 
   describe("PUT /:id", () => {    
     it("should return 404 if no matching id", async () => {
       const res = await request(server).put("/calendars/id1").send({ name: 'name' });
@@ -83,7 +83,7 @@ describe("/calendars", () => {
 
     });
 
-    it.each(calendarValues)("should update calendar %# by _id", async (calendarData) => {
+/*     it.each(calendarValues)("should update calendar %# by _id", async (calendarData) => {
       const calendarDocBefore = await testUtils.findOne(Calendars, calendarData);
       const newName = calendarDocBefore.name + ' new';
       const res = await request(server).put(`/calendars/${calendarDocBefore._id}`).send({ name: newName });
@@ -92,9 +92,9 @@ describe("/calendars", () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual({ ...calendarDocBefore, name: newName });
       expect(calendarDocAfter).toEqual({ ...calendarDocBefore, name: newName });
-    });
+    }); */
   });
-
+/*
   describe("DELETE /:id", () => {    
     it("should return 404 if no matching id", async () => {
       const res = await request(server).delete("/calendars/id1");
