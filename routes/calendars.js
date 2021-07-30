@@ -45,18 +45,40 @@ router.post("/", async (req, res, next) => {
     //console.log(`router.post: name = ${reqBody.name}`)
     if (reqBody.name == null || reqBody.name == 'undefined') {
       res.sendStatus(400);
-    } 
-
-    const calendar = await CalendarDAO.create({reqBody});
-    if (calendar) {
-      res.json(calendar);
     } else {
-      res.sendStatus(404);
+
+    
+      console.log("1");
+      const calendar = await CalendarDAO.create(reqBody);
+      const insertedCalendar = await CalendarDAO.getById(reqBody);
+      console.log(insertedCalendar.name);
+      if (insertedCalendar) {
+        //res.json(insertedCalendar);
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(404);
+      }
     }
   } catch(e) {
     next(e);
   }
 });
 
+router.put("/:id", (req, res, next) => {
+  const requestBody = {...req.body};
+  const calendar = CalendarDAO.getById(req.params.id);
+  if (calendar._id == null || calendar._id == 'undefined') {
+    res.sendStatus(404);
+  } else {
+
+    if (calendar) {
+      CalendarDAO.updateById(req.params.id, requestBody);
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  }  
+  next;
+});
 
 module.exports = router;
