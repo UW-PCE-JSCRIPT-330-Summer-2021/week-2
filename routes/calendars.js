@@ -42,7 +42,6 @@ router.delete("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const reqBody = { ...req.body };
-    //console.log(`router.post: name = ${reqBody.name}`)
     if (reqBody.name == null || reqBody.name == 'undefined') {
       res.sendStatus(400);
     } else {
@@ -58,23 +57,29 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.put("/:id", (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   try {
-    const requestBody = {...req.body};
-    const calendar = CalendarDAO.getById(req.params.id);
-    if (calendar._id == null || calendar._id == 'undefined') {
-      res.sendStatus(404);
-    } else {
+    if (req.params.id != null && req.params.id != 'undefined') {
+      const calendar = await CalendarDAO.getById(req.params.id);
       if (calendar) {
-        CalendarDAO.updateById(req.params.id, requestBody);
-        res.sendStatus(200);
+        const reqBody = {...req.body};
+        if (reqBody.name == null || reqBody.name == 'undefined') {
+          res.sendStatus(400);
+        } else {
+          const updateCalendar = CalendarDAO.updateById(req.params.id, reqBody);
+          if (updateCalendar) {
+            res.sendStatus(200);
+          } else { 
+            res.sendStatus(400);
+          }
+        }
       } else {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
-    }  
+    } 
   } catch(e) {
     console.log(e);
-    next;
+    next(e);
   }
 });
 
