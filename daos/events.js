@@ -7,6 +7,19 @@ module.exports.create = async (name) => {
   return await Events.create({ name });
 };
 
+module.exports.getAll = async () => {
+  //console.log(`getAll: `);
+  try {
+    const events = await Events.find().lean();
+    
+    //const events = await Events.find({ calendarId: undefined }).lean();
+    return events;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
 module.exports.getById = async (id) => {
     console.log(`getById: id = ${id}`);
   try {

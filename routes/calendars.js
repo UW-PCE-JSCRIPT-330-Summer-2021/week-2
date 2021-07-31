@@ -7,7 +7,11 @@ const router = Router();
 router.get("/", async (req, res, next) => {
   try {
     const calendars = await CalendarDAO.getAll();
-    res.json(calendars);
+    if (calendars) {
+      res.json(calendars);
+    } else {
+      res.sendStatus(404);
+    }
   } catch(e) {
     next(e);
   }
