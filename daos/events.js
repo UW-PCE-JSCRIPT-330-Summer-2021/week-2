@@ -8,10 +8,12 @@ module.exports.create = async (event) => {
     console.log(`create: calendarId = ${event.calendarId}`);
   const newEvent = await Events.create({name: event.name, date: event.date, calendarId: event.calendarId});
 
-  console.log(newEvent);
+  // console.log(newEvent);
   // const events = await Events.findOne({ _id: newEvent._id, calendarId: newEvent.calendarId }).lean();
-  const events = await Events.findOne(event).lean();
-  console.log(events);
+  const events = await Events.findOne({name: event.name}).lean();
+  // console.log(events);
+
+  // const results = await model.find(query).lean();
    return newEvent;
 };
 

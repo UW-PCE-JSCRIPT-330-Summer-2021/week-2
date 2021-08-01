@@ -81,8 +81,8 @@ describe("/calendars/:calendarId/events", () => {
     });
   });
   describe("POST /id", () => {   
-    const newEvent = { name: 'new', date: new Date() };
-    /*it("should return 404 if calendar id does not exist", async () => {
+    const newEvent = { name: 'new', date: new Date() };/*
+    it("should return 404 if calendar id does not exist", async () => {
       await Calendars.deleteMany({});
       const res = await request(server).get(url()).send(newEvent);
       expect(res.statusCode).toEqual(404);
@@ -103,6 +103,10 @@ describe("/calendars/:calendarId/events", () => {
       expect(await Events.countDocuments()).toEqual(5);
       const storedEvent = await testUtils.findOne(Events, newEvent);
       const matchObject = { ...newEvent, calendarId };
+      console.log(matchObject);
+      console.log(storedEvent);
+      // const events = await Events.findOne({name: newEvent.name, date: newEvent.date}).lean();
+      // console.log(events);
       expect(storedEvent).toMatchObject({ ...newEvent, calendarId });
     });
   });/*
