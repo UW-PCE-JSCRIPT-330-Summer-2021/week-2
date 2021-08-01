@@ -4,13 +4,13 @@ module.exports = {};
   
 module.exports.create = async (event) => {
   
-    console.log(`create: name = ${event.name}`);
-    console.log(`create: calendarId = ${event.calendarId}`);
+    // console.log(`create: name = ${event.name}`);
+    // console.log(`create: calendarId = ${event.calendarId}`);
   const newEvent = await Events.create({name: event.name, date: event.date, calendarId: event.calendarId});
 
   // console.log(newEvent);
   // const events = await Events.findOne({ _id: newEvent._id, calendarId: newEvent.calendarId }).lean();
-  const events = await Events.findOne({name: event.name}).lean();
+  // const events = await Events.findOne({name: event.name}).lean();
   // console.log(events);
 
   // const results = await model.find(query).lean();
@@ -29,7 +29,7 @@ return newEvents;
 
 
 module.exports.getByCalendarId = async (id) => {
-    console.log(`getByCalendarId: id = ${id}`);
+    // console.log(`getByCalendarId: id = ${id}`);
   try {
     const events = await Events.find({ calendarId: id }).lean();
     return events;
@@ -41,7 +41,7 @@ module.exports.getByCalendarId = async (id) => {
 
 
 module.exports.getById = async (cId, id) => {
-  console.log(`getById: cId = ${cId}, id = ${id}`);
+  // console.log(`getById: cId = ${cId}, id = ${id}`);
   try {
     const events = await Events.findOne({ _id: id, calendarId: cId }).lean();
     return events;
@@ -50,10 +50,11 @@ module.exports.getById = async (cId, id) => {
   }
 };
 
-module.exports.updateById = async (id, newData) => {
-    console.log(`updateById: id = ${id}`);
+module.exports.updateById = async (eventId, newData) => {
+    console.log(`updateById: newData = ${newData}`);
+    console.log(`updateById: eventId = ${eventId}`);
   try {
-    const events = await Events.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
+    const events = await Events.findOneAndUpdate({ _id: eventId }, newData).lean();
     return events;
   } catch (e) {
     return null;

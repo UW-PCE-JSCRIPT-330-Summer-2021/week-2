@@ -109,7 +109,7 @@ describe("/calendars/:calendarId/events", () => {
       // console.log(events);
       expect(storedEvent).toMatchObject({ ...newEvent, calendarId });
     });
-  });/*
+  });
   describe.each(eventValues)("PUT /:id for event %#", (eventData) => {
     let updatedEvent;
     let eventDoc;
@@ -118,14 +118,21 @@ describe("/calendars/:calendarId/events", () => {
       const newDate = new Date(eventDoc.date.getTime() + 10000);
       updatedEvent = { date: newDate, name: eventDoc.name + ' new' };
     });
-    it("should return 404 if calendar id does not match event", async () => {
+    /*it("should return 404 if calendar id does not match event", async () => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
       const res = await request(server).put(url(eventDoc._id, calendarId2)).send(updatedEvent);
       expect(res.statusCode).toEqual(404);
-    });
+    });*/
     it("should update the event", async () => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
       const res = await request(server).put(url(eventDoc._id)).send(updatedEvent);
+      console.log(res.body);
+      console.log({ 
+        ...eventDoc, 
+        calendarId: eventDoc.calendarId.toString(), 
+        ...updatedEvent, 
+        date: updatedEvent.date.toISOString() 
+      })
       expect(res.statusCode).toEqual(200);
       expect(res.body).toMatchObject({ 
         ...eventDoc, 
@@ -134,9 +141,11 @@ describe("/calendars/:calendarId/events", () => {
         date: updatedEvent.date.toISOString() 
       });
       const updatedDoc = await testUtils.findOne(Events, { _id: eventDoc._id });
+      console.log(updatedDoc);
+      console.log({ ...eventDoc, ...updatedEvent });
       expect(updatedDoc).toMatchObject({ ...eventDoc, ...updatedEvent });
     });
-  });
+  });/*
   describe("DELETE /:id", () => {    
     it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
