@@ -59,12 +59,12 @@ describe("/calendars/:calendarId/events", () => {
       const res = await request(server).get(url());
       expect(res.statusCode).toEqual(200);
       console.log(res.body);
-      console.log(eventValues);
+      console.log(eventValues); 
       expect(res.body.length).toEqual(eventValues.length);
       expect(res.body).toMatchObject(eventValues);
     });
   });
-/* 
+ 
   describe("GET /:id", () => {    
     it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
@@ -81,7 +81,7 @@ describe("/calendars/:calendarId/events", () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body).toMatchObject(eventData);
     });
-  });
+  });/*
   describe("POST /id", () => {   
     const newEvent = { name: 'new', date: new Date() };
     it("should return 404 if calendar id does not exist", async () => {

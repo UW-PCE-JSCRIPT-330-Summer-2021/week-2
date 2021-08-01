@@ -7,12 +7,11 @@ module.exports.create = async (name) => {
   return await Events.create({ name });
 };
 
-module.exports.getAll = async () => {
-  //console.log(`getAll: `);
+
+module.exports.getByCalendarId = async (id) => {
+    console.log(`getByCalendarId: id = ${id}`);
   try {
-    const events = await Events.find().lean();
-    
-    //const events = await Events.find({ calendarId: undefined }).lean();
+    const events = await Events.findOne({ calendarId: id }).lean();
     return events;
   } catch (e) {
     console.log(e);
@@ -20,14 +19,15 @@ module.exports.getAll = async () => {
   }
 };
 
+
 module.exports.getById = async (id) => {
-    console.log(`getById: id = ${id}`);
-  try {
-    const events = await Events.findOne({ _id: id }).lean();
-    return events;
-  } catch (e) {
-    return null;
-  }
+  console.log(`getById: id = ${id}`);
+try {
+  const events = await Events.findOne({ _id: id }).lean();
+  return events;
+} catch (e) {
+  return null;
+}
 };
 
 module.exports.updateById = async (id, newData) => {
