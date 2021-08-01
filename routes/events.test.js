@@ -58,8 +58,6 @@ describe("/calendars/:calendarId/events", () => {
     it("should return all events for the calendar", async () => {
       const res = await request(server).get(url());
       expect(res.statusCode).toEqual(200);
-      console.log(res.body);
-      console.log(eventValues); 
       expect(res.body.length).toEqual(eventValues.length);
       expect(res.body).toMatchObject(eventValues);
     });
@@ -69,6 +67,7 @@ describe("/calendars/:calendarId/events", () => {
     it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
       const res = await request(server).get(url(eventDoc._id, calendarId2));
+      console.log(res.toString());
       expect(res.statusCode).toEqual(404);
     });
     it('should return 404 if event id does not exist', async () => {
@@ -78,6 +77,7 @@ describe("/calendars/:calendarId/events", () => {
     it.each(eventValues)("should return event %# by _id", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId, name: eventData.name });
       const res = await request(server).get(url(eventDoc._id));
+      console.log(res.error.path);
       expect(res.statusCode).toEqual(200);
       expect(res.body).toMatchObject(eventData);
     });

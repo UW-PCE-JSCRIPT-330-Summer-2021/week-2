@@ -11,7 +11,7 @@ module.exports.create = async (name) => {
 module.exports.getByCalendarId = async (id) => {
     console.log(`getByCalendarId: id = ${id}`);
   try {
-    const events = await Events.findOne({ calendarId: id }).lean();
+    const events = await Events.find({ calendarId: id }).lean();
     return events;
   } catch (e) {
     console.log(e);
@@ -20,10 +20,10 @@ module.exports.getByCalendarId = async (id) => {
 };
 
 
-module.exports.getById = async (id) => {
+module.exports.getById = async (cId, id) => {
   console.log(`getById: id = ${id}`);
 try {
-  const events = await Events.findOne({ _id: id }).lean();
+  const events = await Events.findOne({ _id: id, calendarId: cId }).lean();
   return events;
 } catch (e) {
   return null;

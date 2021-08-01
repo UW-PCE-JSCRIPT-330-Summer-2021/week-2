@@ -9,22 +9,14 @@ const router = Router({ mergeParams: true });
 router.get("/", async (req, res, next) => {
     try {
       const cId = req.params.calendarId;
-      const eventId = req.params.eventId;
       const calendars = await CalendarDAO.getById(cId);
-      
-      
+
       if (calendars) {
-        console.log('3');
-        const calendarEvents = await EventsDAO.getByCalendarId(cId);
-        console.log('4');
-       
+        const calendarEvents = await EventsDAO.getByCalendarId(cId);   
         res.json(calendarEvents);
-       
-       console.log('5');
       } else {
         res.sendStatus(404);
       }
-      
     } catch(e) {
       console.log(e);
       next(e);
@@ -34,24 +26,19 @@ router.get("/", async (req, res, next) => {
   
   router.get("/:id", async (req, res, next) => {
     try {
-      console.log('10');
-      console.log(req.params.id);
-      console.log(req.body);
-      const calendarId = req.params.id;
-      if (calendarId == null || calendarId == "undefined") {
-        res.sendStatus(404);
-      } else {
-        const events = await EventsDAO.getByCalendarId(calendarId);
-      
-        if (events) {
-          console.log('11');
-          res.json(events);
-        
-          console.log('12');
-        } else {
-          console.log('19')
+      const cId = req.params.calendarId;
+      const id = req.params.id;
+      const calendars = await CalendarDAO.getById(cId);
+
+      if (calendars) {
+        const event = await EventsDAO.getById(cId, id);
+        if (!event) {
           res.sendStatus(404);
+        } else {
+          res.json(event);
         }
+      } else {
+        res.sendStatus(404);
       }
     } catch(e) {
       console.log(e);
