@@ -50,12 +50,21 @@ router.get("/", async (req, res, next) => {
     try {
       const reqBody ={...req.body};
       const calendarId = req.params.calendarId;
+      const calendars = await CalendarDAO.getById(calendarId);
       // const newEvent = [{ name: reqBody.name.toString(), date: reqBody.date.toString(), calendarId:calendarId.toString() }];
-
-      const events = await EventsDAO.create({ ...reqBody, calendarId });
-      if (events) {
-        res.json(events);
-      } 
+      if (calendars) { 
+        if (req.body.name == 'undefined' || req.body.name == null ||
+            req.body.date == 'undefined' || req.body.date == null) {
+          res.sendStatus(400);
+        } else {
+          const events = await EventsDAO.create({ ...reqBody, calendarId });
+          if (events) {
+            res.json(events);
+          } 
+        }
+      } else {
+        res.sendStatus(404);
+      }
     } catch(e) {
       // console.log(e);
       next(e);
@@ -67,7 +76,7 @@ router.get("/", async (req, res, next) => {
       
       const calendarId = req.params.calendarId;
       const eventId = req.params.id;
-      const calendars = await CalendarDAO.getById(calendarId);
+      const calendars = await EventsDAO.getById(calendarId, eventId);
       const reqBody = {...req.body, calendarId};
       // console.log(reqBody);
 
