@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const calendars = require('./calendars');
 
 //const calendarSchema = require('../models/calendars');
 
@@ -7,6 +8,7 @@ const eventSchema = new mongoose.Schema({
   date: { type: String },
  // calendarId: { type: [calendarSchema] }
   calendarId: { type: String, required: false }
+  // calendarId: { type: mongoose.Schema.Types.ObjectId, ref: calendars, required: false }
 });
 
 

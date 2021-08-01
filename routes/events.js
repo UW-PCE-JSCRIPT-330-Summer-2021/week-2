@@ -26,12 +26,12 @@ router.get("/", async (req, res, next) => {
   
   router.get("/:id", async (req, res, next) => {
     try {
-      const cId = req.params.calendarId;
+      const calendarId = req.params.calendarId;
       const id = req.params.id;
-      const calendars = await CalendarDAO.getById(cId);
+      const calendars = await CalendarDAO.getById(calendarId);
 
       if (calendars) {
-        const event = await EventsDAO.getById(cId, id);
+        const event = await EventsDAO.getById(calendarId, id);
         if (!event) {
           res.sendStatus(404);
         } else {
@@ -46,11 +46,18 @@ router.get("/", async (req, res, next) => {
     }
   });
 
-  router.post("/:id", async (req, res, next) => {
+  router.post("/", async (req, res, next) => {
     try {
-      const calendars = await CalendarDAO.getAll();
-      res.json(calendars);
+      const reqBody ={...req.body};
+      const calendarId = req.params.calendarId;
+      const newEvent = [{ name: reqBody.name.toString(), date: reqBody.date.toString(), calendarId:calendarId.toString() }];
+
+      const events = await EventsDAO.create({ ...reqBody, calendarId });
+      if (events) {
+        res.json(events);
+      } 
     } catch(e) {
+      console.log(e);
       next(e);
     }
   });

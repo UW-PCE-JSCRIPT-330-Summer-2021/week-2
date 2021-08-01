@@ -67,7 +67,6 @@ describe("/calendars/:calendarId/events", () => {
     it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
       const res = await request(server).get(url(eventDoc._id, calendarId2));
-      console.log(res.toString());
       expect(res.statusCode).toEqual(404);
     });
     it('should return 404 if event id does not exist', async () => {
@@ -77,14 +76,13 @@ describe("/calendars/:calendarId/events", () => {
     it.each(eventValues)("should return event %# by _id", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId, name: eventData.name });
       const res = await request(server).get(url(eventDoc._id));
-      console.log(res.error.path);
       expect(res.statusCode).toEqual(200);
       expect(res.body).toMatchObject(eventData);
     });
-  });/*
+  });
   describe("POST /id", () => {   
     const newEvent = { name: 'new', date: new Date() };
-    it("should return 404 if calendar id does not exist", async () => {
+    /*it("should return 404 if calendar id does not exist", async () => {
       await Calendars.deleteMany({});
       const res = await request(server).get(url()).send(newEvent);
       expect(res.statusCode).toEqual(404);
@@ -98,15 +96,16 @@ describe("/calendars/:calendarId/events", () => {
       const res = await request(server).post(url()).send({ ...newEvent, date: null });
       expect(res.statusCode).toEqual(400);
       expect(await Events.countDocuments()).toEqual(4);
-    });
+    });*/
     it("should create a new event", async () => {
       const res = await request(server).post(url()).send(newEvent);
       expect(res.statusCode).toEqual(200);
       expect(await Events.countDocuments()).toEqual(5);
       const storedEvent = await testUtils.findOne(Events, newEvent);
+      const matchObject = { ...newEvent, calendarId };
       expect(storedEvent).toMatchObject({ ...newEvent, calendarId });
     });
-  });
+  });/*
   describe.each(eventValues)("PUT /:id for event %#", (eventData) => {
     let updatedEvent;
     let eventDoc;
