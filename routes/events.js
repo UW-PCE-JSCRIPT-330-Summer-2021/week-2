@@ -68,7 +68,8 @@ router.get("/", async (req, res, next) => {
       const calendarId = req.params.calendarId;
       const eventId = req.params.id;
       const calendars = await CalendarDAO.getById(calendarId);
-      const reqBody = {...req.body};
+      const reqBody = {...req.body, calendarId};
+      // console.log(reqBody);
 
       if (calendars) {
         const event = await EventsDAO.updateById(eventId, reqBody);
@@ -81,16 +82,30 @@ router.get("/", async (req, res, next) => {
         res.sendStatus(404);
       }
     } catch(e) {
-      console.log(e);
       next(e);
     }
   });
 
   router.delete("/:id", async (req, res, next) => {
     try {
-      const calendars = await CalendarDAO.getAll();
-      res.json(calendars);
+      const calendarId = req.params.calendarId;
+      const eventId = req.params.id;
+
+      const eventCheck = await EventsDAO.getById(calendarId, eventId);
+      const calendars = await CalendarDAO.getById(calendarId);
+      if (eventCheck && calendars) {
+        
+        const event = await EventsDAO.removeById(req.params.id);
+        if (event) {
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(404);
+        } 
+      } else {
+        res.sendStatus(404);
+      }
     } catch(e) {
+      // console.log(e);
       next(e);
     }
   });

@@ -51,12 +51,24 @@ module.exports.getById = async (cId, id) => {
 };
 
 module.exports.updateById = async (eventId, newData) => {
-    console.log(`updateById: newData = ${newData}`);
+    console.log(`updateById: newData = ${JSON.stringify(newData)}`);
     console.log(`updateById: eventId = ${eventId}`);
   try {
-    const events = await Events.findOneAndUpdate({ _id: eventId }, newData).lean();
+    const events = await Events.findOneAndUpdate({ _id: eventId }, newData, { new: true }).lean();
     return events;
   } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+module.exports.removeById = async (eventId) => {
+    // console.log(`removeById: eventId = ${eventId}`);
+  try {
+    const events = await Events.remove({ _id: eventId }).lean();
+    return events;
+  } catch (e) {
+    // console.log(e);
     return null;
   }
 };

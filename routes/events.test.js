@@ -126,13 +126,6 @@ describe("/calendars/:calendarId/events", () => {
     it("should update the event", async () => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
       const res = await request(server).put(url(eventDoc._id)).send(updatedEvent);
-      console.log(res.body);
-      console.log({ 
-        ...eventDoc, 
-        calendarId: eventDoc.calendarId.toString(), 
-        ...updatedEvent, 
-        date: updatedEvent.date.toISOString() 
-      })
       expect(res.statusCode).toEqual(200);
       expect(res.body).toMatchObject({ 
         ...eventDoc, 
@@ -141,11 +134,9 @@ describe("/calendars/:calendarId/events", () => {
         date: updatedEvent.date.toISOString() 
       });
       const updatedDoc = await testUtils.findOne(Events, { _id: eventDoc._id });
-      console.log(updatedDoc);
-      console.log({ ...eventDoc, ...updatedEvent });
       expect(updatedDoc).toMatchObject({ ...eventDoc, ...updatedEvent });
     });
-  });/*
+  });
   describe("DELETE /:id", () => {    
     it.each(eventValues)("should return 404 if calendar id does not match %# event", async (eventData) => {
       const eventDoc = await testUtils.findOne(Events, { calendarId });
@@ -164,5 +155,5 @@ describe("/calendars/:calendarId/events", () => {
       expect(updatedDoc).toEqual(null);
       expect(await Events.countDocuments()).toEqual(3);
     });
-  }); */
+  }); 
 });
