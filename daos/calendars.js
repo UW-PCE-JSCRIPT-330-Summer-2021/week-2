@@ -28,11 +28,24 @@ module.exports.getAll = async () => {
 };
 
 module.exports.updateById = async (id, newData) => {
-  //console.log(`updateById: id = ${id}`);
+  // console.log(`updateById: newData = ${JSON.stringify(newData)}`);
+  // console.log(`updateById: id = ${id}`);
   try {
-    const calendar = await Calendars.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
-    return calendar;
+    const calendars = await Calendars.findOneAndUpdate({ _id: id }, newData, { new: true }).lean();
+    return calendars;
   } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+module.exports.removeById = async (id) => {
+    // console.log(`removeById: id = ${id}`);
+  try {
+    const calendars = await Calendars.remove({ _id: id }).lean();
+    return calendars;
+  } catch (e) {
+    // console.log(e);
     return null;
   }
 };

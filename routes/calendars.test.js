@@ -49,13 +49,12 @@ describe("/calendars", () => {
     });
   });
 
-
   describe("POST /id", () => {    
-     it("should return 400 if no name provided", async () => {
+    it("should return 400 if no name provided", async () => {
       const res = await request(server).post("/calendars").send({ nme: 'missing' });
       expect(res.statusCode).toEqual(400);
       expect(await Calendars.countDocuments()).toEqual(calendarValues.length);
-    }); 
+    });
     it("should create a new calendar if name is provided", async () => {
       const res = await request(server).post("/calendars").send({ name: 'new' });
       expect(res.statusCode).toEqual(200);
@@ -66,7 +65,6 @@ describe("/calendars", () => {
   });
 
 
- 
   describe("PUT /:id", () => {    
     it("should return 404 if no matching id", async () => {
       const res = await request(server).put("/calendars/id1").send({ name: 'name' });
@@ -83,7 +81,7 @@ describe("/calendars", () => {
 
     });
 
-/*     it.each(calendarValues)("should update calendar %# by _id", async (calendarData) => {
+    it.each(calendarValues)("should update calendar %# by _id", async (calendarData) => {
       const calendarDocBefore = await testUtils.findOne(Calendars, calendarData);
       const newName = calendarDocBefore.name + ' new';
       const res = await request(server).put(`/calendars/${calendarDocBefore._id}`).send({ name: newName });
@@ -92,9 +90,9 @@ describe("/calendars", () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual({ ...calendarDocBefore, name: newName });
       expect(calendarDocAfter).toEqual({ ...calendarDocBefore, name: newName });
-    }); */
+    });
   });
-/*
+
   describe("DELETE /:id", () => {    
     it("should return 404 if no matching id", async () => {
       const res = await request(server).delete("/calendars/id1");
@@ -110,5 +108,5 @@ describe("/calendars", () => {
       expect(calendarDocAfter).toEqual(null);
       expect(await Calendars.countDocuments()).toEqual(calendarValues.length - 1);
     });
-  }); */
+  });
 });

@@ -63,26 +63,39 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    if (req.params.id != null && req.params.id != 'undefined') {
+    const reqBody = {...req.body};
+    if (reqBody.name == null || reqBody.name == 'undefined') {
+      res.sendStatus(400);
+    } else {
       const calendar = await CalendarDAO.getById(req.params.id);
       if (calendar) {
-        const reqBody = {...req.body};
-        if (reqBody.name == null || reqBody.name == 'undefined') {
-          res.sendStatus(400);
-        } else {
-          const updateCalendar = CalendarDAO.updateById(req.params.id, reqBody);
-          if (updateCalendar) {
-            res.sendStatus(200);
-          } else { 
-            res.sendStatus(400);
-          }
+        const updateCalendar = await CalendarDAO.updateById(req.params.id, reqBody);
+        if (updateCalendar) {
+          res.json(updateCalendar);
+        } else { 
+          res.sendStatus(404);
         }
       } else {
         res.sendStatus(404);
       }
-    } 
+    }
   } catch(e) {
-    console.log(e);
+    // console.log(e);
+    next(e);
+  }
+});  
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const calendarId = req.params.id;
+    const calendars = await CalendarDAO.getById(calendarId);
+    if (calendars) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch(e) {
+    // console.log(e);
     next(e);
   }
 });

@@ -51,8 +51,8 @@ module.exports.getById = async (cId, id) => {
 };
 
 module.exports.updateById = async (eventId, newData) => {
-    console.log(`updateById: newData = ${JSON.stringify(newData)}`);
-    console.log(`updateById: eventId = ${eventId}`);
+    // console.log(`updateById: newData = ${JSON.stringify(newData)}`);
+    // console.log(`updateById: eventId = ${eventId}`);
   try {
     const events = await Events.findOneAndUpdate({ _id: eventId }, newData, { new: true }).lean();
     return events;
